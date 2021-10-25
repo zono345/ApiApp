@@ -15,23 +15,23 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //ViewPager2の初期化
+        // ViewPager2の初期化
         viewPager2.apply {
             adapter = viewPagerAdapter
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL //スワイプの向き横
-            offscreenPageLimit = viewPagerAdapter.itemCount //ViewPager2で保持する画面数
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL // スワイプの向き横
+            offscreenPageLimit = viewPagerAdapter.itemCount // ViewPager2で保持する画面数
         }
 
-        //TabLayoutの初期化
-        //TabLayoutとViewPager2を紐づける
-        //TabLayoutのTextを指定する
+        // TabLayoutの初期化
+        // TabLayoutとViewPager2を紐づける
+        // TabLayoutのTextを指定する
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(viewPagerAdapter.titleIds[position])
         }.attach()
     }
 
-    override fun onAddFavorite(shop: Shop) { //Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
-        FavoriteShop.insert(FavoriteShop().apply { //TODO バグ？
+    override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
+        FavoriteShop.insert(FavoriteShop().apply {
             id = shop.id
             name = shop.name
             imageUrl = shop.logoImage
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
     }
 
-    override fun onDeleteFavorite(id: String) { //Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
+    override fun onDeleteFavorite(id: String) { // Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
         showConfirmDeleteFavoriteDialog(id)
     }
 

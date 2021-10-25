@@ -13,82 +13,81 @@ import com.squareup.picasso.Picasso
 
 class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    //取得したJsonデータを解析し、Shop型オブジェクトとして生成したものを格納するリスト
+    // 取得したJsonデータを解析し、Shop型オブジェクトとして生成したものを格納するリスト
     private val items = mutableListOf<Shop>()
 
-    //一覧画面から登録するときのコールバック(FavoriteFragmentへ通知するメソッド)
+    // 一覧画面から登録するときのコールバック(FavoriteFragmentへ通知するメソッド)
     var onClickAddFavorite: ((Shop) -> Unit?)? = null
 
-    //一覧画面から削除するときのコールバック(ApiFragmentへ通知するメソッド)
+    // 一覧画面から削除するときのコールバック(ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((Shop) -> Unit)? = null
 
-    //表示リスト更新時に呼び出すメソッド
+    // 表示リスト更新時に呼び出すメソッド
     fun refresh(list: List<Shop>) {
         items.apply {
-            clear()             //itemを空にする
-            addAll(list)        //itemsにlistを全て追加する
+            clear()             // itemを空にする
+            addAll(list)        // itemsにlistを全て追加する
         }
-        notifyDataSetChanged()  //recyclerViewを再描画させる
+        notifyDataSetChanged()  // recyclerViewを再描画させる
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        //ViewHolderを継承したApiItemViewHolderオブジェクトを生成し戻す
+        // ViewHolderを継承したApiItemViewHolderオブジェクトを生成し戻す
         return ApiItemViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_favorite, parent, false))
     }
 
-    //ViewHolderを継承したApiItemHolderクラスの定義
+    // ViewHolderを継承したApiItemHolderクラスの定義
     class ApiItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        //レイアウトファイルからidがrootViewのConstraintLayoutオブジェクトを取得し、代入
+        // レイアウトファイルからidがrootViewのConstraintLayoutオブジェクトを取得し、代入
         val rootView: ConstraintLayout = view.findViewById(R.id.rootView)
-        //レイアウトファイルからidがnameTextViewのTextViewオブジェクトを取得し、代入
+        // レイアウトファイルからidがnameTextViewのTextViewオブジェクトを取得し、代入
         val nameTextView: TextView = view.findViewById(R.id.nameTextView)
-        //レイアウトファイルからidがimageViewのImageViewオブジェクトを取得し、代入
+        // レイアウトファイルからidがimageViewのImageViewオブジェクトを取得し、代入
         val imageView: ImageView = view.findViewById(R.id.imageView)
-        //レイアウトファイルからidがfavoriteImageViewのImageViewオブジェクトを取得し、代入
+        // レイアウトファイルからidがfavoriteImageViewのImageViewオブジェクトを取得し、代入
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
     }
 
     override fun getItemCount(): Int {
-        //itemsプロパティに格納されている要素数を返す
+        // itemsプロパティに格納されている要素数を返す
         return items.size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ApiItemViewHolder) {
-            //生成されたViewHolderがApiItemViewHolderだったら・・・
+            // 生成されたViewHolderがApiItemViewHolderだったら・・・
             updateApiItemViewHolder(holder, position)
-        } //{
-        //別のViewHolderをバインドさせることが可能となる
+        } // {
+        // 別のViewHolderをバインドさせることが可能となる
         // }
     }
 
     private fun updateApiItemViewHolder(holder: ApiItemViewHolder, position: Int) {
-        //生成されたViewHolderの位置を指定し、オブジェクトを代入
+        // 生成されたViewHolderの位置を指定し、オブジェクトを代入
         val data = items[position]
-        //お気に入り状態を取得
+        // お気に入り状態を取得
         val isFavorite = FavoriteShop.findBy(data.id) != null
 
         holder.apply {
             rootView.apply {
-                //偶数番目と奇数番目で背景色を変更させる
+                // 偶数番目と奇数番目で背景色を変更させる
                 setBackgroundColor(ContextCompat.getColor(context,
-                if (position % 2 == 0) {android.R.color.white}
-                else {android.R.color.darker_gray}
+                if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
                 ))
             }
-            //nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
+            // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
             nameTextView.text = data.name
-            //Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
+            // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
             Picasso.get().load(data.logoImage).into(imageView)
-            //白抜きの星マークの画像を指定
+            // 白抜きの星マークの画像を指定
             favoriteImageView.apply {
-                //Picassoというライブラリを使ってImageViewに画像をはめ込む
+                // Picassoというライブラリを使ってImageViewに画像をはめ込む
                 setImageResource(if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
                 setOnClickListener{
                     if (isFavorite) {
                         onClickDeleteFavorite?.invoke(data)
                     } else {
-                        onClickAddFavorite?.invoke(data) //TODO バグ？
+                        onClickAddFavorite?.invoke(data)
                     }
                     notifyItemChanged(position)
                 }
