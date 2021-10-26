@@ -63,12 +63,15 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         holder.apply {
             rootView.apply {
                 // 偶数番目と奇数番目で背景色を変更させる
-                setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray))
+                setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
+                ))
                 setOnClickListener {
                     onClickItem?.invoke(data.url)
                 }
             }
             nameTextView.text = data.name
+            addressTextView.text = data.address // 課題用追記。住所の表示
+
             Picasso.get().load(data.imageUrl).into(imageView) // Picassoというライブラリを使ってImageViewに画像をはめ込む
             favoriteImageView.setOnClickListener {
                 onClickDeleteFavorite?.invoke(data)
@@ -81,6 +84,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
     class FavoriteItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val rootView: ConstraintLayout = view.findViewById(R.id.rootView)
         val nameTextView: TextView = view.findViewById(R.id.nameTextView)
+        val addressTextView: TextView = view.findViewById(R.id.addressTextView) // 課題用追記。住所の表示
         val imageView: ImageView = view.findViewById(R.id.imageView)
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
     }

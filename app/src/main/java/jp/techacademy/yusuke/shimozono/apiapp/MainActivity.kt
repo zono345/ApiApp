@@ -7,6 +7,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 
+public var XX: String = ""
+
 class MainActivity : AppCompatActivity(), FragmentCallback {
 
     private val viewPagerAdapter by lazy { ViewPagerAdapter(this) }
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         FavoriteShop.insert(FavoriteShop().apply {
             id = shop.id
             name = shop.name
+            address = shop.address // 課題用追記。住所の表示
             imageUrl = shop.logoImage
             url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
         })
@@ -67,7 +70,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
     }
 
     companion object {
-        private const val VIEW_PAGER_POSITION_API = 0
-        private const val VIEW_PAGER_POSITION_FAVORITE = 1
+        public const val VIEW_PAGER_POSITION_API = 0 //TODO private -> publicに変更した
+        public const val VIEW_PAGER_POSITION_FAVORITE = 1  //TODO private -> publicに変更した
     }
 }

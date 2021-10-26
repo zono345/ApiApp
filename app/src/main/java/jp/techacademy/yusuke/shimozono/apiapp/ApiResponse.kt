@@ -21,6 +21,8 @@ data class Shop(
     val logoImage: String,
     @SerializedName("name")
     val name: String,
+    @SerializedName("address") // 課題用追記。住所の表示
+    val address: String,
 )
 
 data class CouponUrls(

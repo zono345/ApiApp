@@ -58,6 +58,10 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
         val imageView: ImageView = view.findViewById(R.id.imageView)
         // レイアウトファイルからidがfavoriteImageViewのImageViewオブジェクトを取得し、代入
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
+
+        // 課題のための機能追加。住所の表示。レイアウトファイルからidがaddressTextViewのTextViewオブジェクトを取得し、代入
+        val addressTextView: TextView = view.findViewById(R.id.addressTextView)
+
     }
 
     override fun getItemCount(): Int {
@@ -91,6 +95,10 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
             }
             // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
             nameTextView.text = data.name
+
+            // 課題のための機能追加。住所の表示。
+            addressTextView.text = data.address // 課題用追記。住所の表示
+
             // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
             Picasso.get().load(data.logoImage).into(imageView)
             // 白抜きの星マークの画像を指定
