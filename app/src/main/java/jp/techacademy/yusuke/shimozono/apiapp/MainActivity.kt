@@ -7,8 +7,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 
-public var XX: String = ""
-
 class MainActivity : AppCompatActivity(), FragmentCallback {
 
     private val viewPagerAdapter by lazy { ViewPagerAdapter(this) }
@@ -32,8 +30,8 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         }.attach()
     }
 
-    override fun onClickItem(url: String) {
-        WebViewActivity.start(this, url)
+    override fun onClickItem(shop: Shop) {
+        WebViewActivity.start(this, shop) // TODO 課題用追記：クリックしたらshopで渡す
     }
 
     override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
@@ -70,7 +68,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
     }
 
     companion object {
-        public const val VIEW_PAGER_POSITION_API = 0 //TODO private -> publicに変更した
-        public const val VIEW_PAGER_POSITION_FAVORITE = 1  //TODO private -> publicに変更した
+        private const val VIEW_PAGER_POSITION_API = 0
+        private const val VIEW_PAGER_POSITION_FAVORITE = 1
     }
 }

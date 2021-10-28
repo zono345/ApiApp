@@ -40,7 +40,10 @@ class FavoriteFragment: Fragment() {
             }
             // Itemをクリックしたとき
             onClickItem = {
-                fragmentCallback?.onClickItem(it)
+                var shop = Shop(CouponUrls(it.url,it.url),it.id,it.imageUrl,it.name,it.address)
+                fragmentCallback?.onClickItem(shop)
+//                var shop = Shop(CouponUrls(it.url, it.url)) //TODO 課題用追記　要修正
+//                fragmentCallback?.onClickItem(shop)
             }
         }
         // RecyclerViewの初期化

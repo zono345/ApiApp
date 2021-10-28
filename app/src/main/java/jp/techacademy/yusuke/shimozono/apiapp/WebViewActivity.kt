@@ -3,82 +3,104 @@ package jp.techacademy.yusuke.shimozono.apiapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.picasso.Picasso
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_web_view.*
 
-class WebViewActivity : AppCompatActivity(), FragmentCallback {
+class WebViewActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
-        webView.loadUrl(intent.getStringExtra(KEY_URL).toString())
 
+        var shop = intent.getSerializableExtra(KEY_SHOP) as? Shop
 
-//        // TODO 以下の固まりは課題用追記
+        if (shop == null) {
+            Log.d("test99", "shopはnullだよ。intentで受け取れてないよ")
+        } else {
+            var url =
+                if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
+            webView.loadUrl(url)
 
-        favoriteImageView.setOnClickListener() {
-            button.text = "てすと"
+//        btnTextRefresh()
 
         }
 
 
 
+//
+//
+//        // 課題用：クリックした店のクーポン画面のURLを格納
+//        var searchUrl:String = intent.getStringExtra("key_url").toString()
+//
+//        // TODO 後で消す。検証用
+//        button.text = searchUrl
+//
+//        //クリックした店のお気に入り登録状況に応じて、初期状態のボタンのテキストを変更する
+//        if (FavoriteShop.findByURL(searchUrl) == null) { // TODO 要修正
+//            button.text = "お気に入りへ追加する"
+//        } else {
+//            button.text = "お気に入りから削除する"
+//        }
+
+
+
+
     }
+
+
+//    private fun btnTextRefresh() {
+//        var shop = intent.getSerializableExtra(KEY_SHOP) as Shop
+//        var favState:Boolean = false // 表示しているクーポン画面の店のお気に入り登録状態を表す。true→登録済み、false→未登録
+//        favState = FavoriteShop.findBy(shop.id) != null
+//        if (favState) button.text = "お気に入りから削除する" else button.text = "お気に入りへ追加する"
+//    }
+
 
     companion object {
-        private const val KEY_URL = "key_url"
-        fun start(activity: Activity, url: String) {
-            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_URL, url))
+        private const val KEY_SHOP = "key_shop"
+        fun start(activity: Activity, shop: Shop) {
+            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_SHOP, "shop"))
         }
     }
 
 
-    //TODO 以下は全て課題用の追記
-    private val viewPagerAdapter by lazy { ViewPagerAdapter(this) }
 
-    override fun onClickItem(url: String) {
-//        WebViewActivity.start(this, url)
+
+    // TODO companion objectのテキスト記載の当初案
+//    companion object {
+//        private const val KEY_URL = "key_url"
+//        fun start(activity: Activity, url: String) {
+//            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_URL, url))
+//        }
+//    }
+
+
+    // TODO 変更案↓ urlで受け取る時のコード。id検索できないから没。
+/*
+    companion object {
+        private const val KEY_URL = "key_url"
+        private const val KEY_ID = "key_id"
+
+        fun start(activity: Activity, url: String, id: String) {
+            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_URL, url))
+            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_ID, id))
+        }
     }
+*/
 
-
-
-
-    override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
-        FavoriteShop.insert(FavoriteShop().apply {
-            id = shop.id
-            name = shop.name
-            address = shop.address // 課題用追記。住所の表示
-            imageUrl = shop.logoImage
-            url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
-        })
-        (viewPagerAdapter.fragments[MainActivity.VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
-    }
-
-    override fun onDeleteFavorite(id: String) { // Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
-        showConfirmDeleteFavoriteDialog(id)
-    }
-
-    private fun showConfirmDeleteFavoriteDialog(id: String) {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.delete_favorite_dialog_title)
-            .setMessage(R.string.delete_favorite_dialog_message)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                deleteFavorite(id)
-            }
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .create()
-            .show()
-    }
-
-    private fun deleteFavorite(id: String) {
-        FavoriteShop.delete(id)
-        (viewPagerAdapter.fragments[MainActivity.VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
-        (viewPagerAdapter.fragments[MainActivity.VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
-    }
 
 
 

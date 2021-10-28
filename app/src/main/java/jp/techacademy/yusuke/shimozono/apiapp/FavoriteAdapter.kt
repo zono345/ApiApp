@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     // お気に入り登録したShopを格納
     private val items = mutableListOf<FavoriteShop>()
 
@@ -19,7 +19,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
 
     // Itemを押したときのメソッド
-    var onClickItem: ((String) -> Unit)? = null
+    var onClickItem: ((FavoriteShop) -> Unit)? = null
 
     // 更新用のメソッド
     fun refresh(list: List<FavoriteShop>) {
@@ -66,7 +66,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
                 setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
                 ))
                 setOnClickListener {
-                    onClickItem?.invoke(data.url)
+                    onClickItem?.invoke(data)
                 }
             }
             nameTextView.text = data.name
