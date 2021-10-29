@@ -91,14 +91,13 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
                 if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray))
                 setOnClickListener {
                     onClickItem?.invoke(data)
-//                    onClickItem?.invoke(if (data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc)
                 }
             }
             // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
             nameTextView.text = data.name
 
-            // 課題のための機能追加。住所の表示。
-            addressTextView.text = data.address // 課題用追記。住所の表示
+            // 住所の表示
+            addressTextView.text = data.address
 
             // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
             Picasso.get().load(data.logoImage).into(imageView)

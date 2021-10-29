@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         FavoriteShop.insert(FavoriteShop().apply {
             id = shop.id
             name = shop.name
-            address = shop.address // 課題用追記。住所の表示
+            address = shop.address // 住所の表示
             imageUrl = shop.logoImage
             url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
         })
@@ -70,5 +70,14 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
     companion object {
         private const val VIEW_PAGER_POSITION_API = 0
         private const val VIEW_PAGER_POSITION_FAVORITE = 1
+    }
+
+
+    // クーポン画面からメイン画面へ戻った時(=onRestart)に、最新のお気に入り登録状況を画面に反映させる
+    override fun onRestart() {
+        super.onRestart()
+        viewPager2.apply {
+            adapter = viewPagerAdapter
+        }
     }
 }

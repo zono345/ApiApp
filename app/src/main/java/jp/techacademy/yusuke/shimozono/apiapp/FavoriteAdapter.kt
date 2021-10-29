@@ -70,7 +70,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
                 }
             }
             nameTextView.text = data.name
-            addressTextView.text = data.address // 課題用追記。住所の表示
+            addressTextView.text = data.address // 住所の表示
 
             Picasso.get().load(data.imageUrl).into(imageView) // Picassoというライブラリを使ってImageViewに画像をはめ込む
             favoriteImageView.setOnClickListener {

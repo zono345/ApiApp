@@ -22,7 +22,7 @@ data class Shop(
     val logoImage: String,
     @SerializedName("name")
     val name: String,
-    @SerializedName("address") // 課題用追記。住所の表示
+    @SerializedName("address") // 住所の表示
     val address: String,
 ):Serializable // putExtraでオブジェクト型(Shop型)で受け渡す際にSerializable型にしておく必要がある
 

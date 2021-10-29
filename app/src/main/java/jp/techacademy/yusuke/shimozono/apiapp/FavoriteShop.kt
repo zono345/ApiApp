@@ -10,7 +10,7 @@ open class FavoriteShop: RealmObject() {
     var imageUrl: String = ""
     var name: String = ""
     var url: String = ""
-    var address: String = "" // 課題対応。住所の表示
+    var address: String = "" // 住所の表示のための変数
 
     companion object {
         // お気に入りのShopを全件取得
