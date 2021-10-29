@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
     }
 
     override fun onClickItem(shop: Shop) {
-        WebViewActivity.start(this, shop) // TODO 課題用追記：クリックしたらshopで渡す
+        WebViewActivity.start(this, shop) // クリックしたらShop型を引数としてstartメソッドを実行する
     }
 
     override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)

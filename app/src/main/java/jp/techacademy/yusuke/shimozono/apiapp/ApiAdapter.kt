@@ -22,7 +22,7 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
     var onClickDeleteFavorite: ((Shop) -> Unit)? = null
 
     // Itemを押したときのメソッド
-    var onClickItem: ((Shop) -> Unit)? = null // TODO 課題用追記
+    var onClickItem: ((Shop) -> Unit)? = null // String型でなく、Shop型対応に変更
 
     fun refresh(list: List<Shop>) {
         update(list, false)
@@ -90,7 +90,7 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
                 setBackgroundColor(ContextCompat.getColor(context,
                 if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray))
                 setOnClickListener {
-                    onClickItem?.invoke(data) // TODO 課題用追記
+                    onClickItem?.invoke(data)
 //                    onClickItem?.invoke(if (data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc)
                 }
             }

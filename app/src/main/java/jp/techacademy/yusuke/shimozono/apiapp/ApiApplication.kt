@@ -10,7 +10,7 @@ class ApiApplication: Application() {
         super.onCreate()
         Realm.init(this)
 
-        // ここはメンタリングのアドバイスを元に追記した。以下リンクからコピペ
+        // 新しいバージョンのRealm(plugin:10.7.0以降？)を使う場合は、UiThreadでのRealm使用を許可する必要がある。コードは以下リンクからコピペ。
         // https://www.section.io/engineering-education/using-realm-database-in-android/
         val configuration = RealmConfiguration.Builder()
             .allowWritesOnUiThread(true)

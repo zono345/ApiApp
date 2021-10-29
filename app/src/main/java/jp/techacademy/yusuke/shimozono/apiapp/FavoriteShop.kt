@@ -32,17 +32,6 @@ open class FavoriteShop: RealmObject() {
                     }
             }
 
-        // TODO ※やっぱ使わないから後で削除する：課題用：クーポンURLでお気に入り有無を検索するためのメソッド
-        fun findByURL(url: String): FavoriteShop? =
-            Realm.getDefaultInstance().use { realm ->
-                realm.where(FavoriteShop::class.java)
-                    .equalTo(FavoriteShop::url.name, url)
-                    .findFirst()?.let {
-                        realm.copyFromRealm(it)
-                    }
-            }
-
-
         // お気に入り追加
         fun insert(favoriteShop: FavoriteShop) =
             Realm.getDefaultInstance().executeTransaction {

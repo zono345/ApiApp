@@ -40,12 +40,12 @@ class FavoriteFragment: Fragment() {
             }
             // Itemをクリックしたとき
             onClickItem = {
+                // クリックしたときのitは初期状態だとFavoriteShop型なのでputExtraでShop型で受け渡すためにFavoriteShop -> Shop へオブジェクトの型を変更する必要がある
                 var shop = Shop(CouponUrls(it.url,it.url),it.id,it.imageUrl,it.name,it.address)
                 fragmentCallback?.onClickItem(shop)
-//                var shop = Shop(CouponUrls(it.url, it.url)) //TODO 課題用追記　要修正
-//                fragmentCallback?.onClickItem(shop)
             }
         }
+
         // RecyclerViewの初期化
         recyclerView.apply {
             adapter = favoriteAdapter

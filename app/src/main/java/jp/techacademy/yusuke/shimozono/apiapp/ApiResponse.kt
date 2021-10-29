@@ -24,11 +24,11 @@ data class Shop(
     val name: String,
     @SerializedName("address") // 課題用追記。住所の表示
     val address: String,
-)
+):Serializable // putExtraでオブジェクト型(Shop型)で受け渡す際にSerializable型にしておく必要がある
 
 data class CouponUrls(
     @SerializedName("pc")
     val pc: String,
     @SerializedName("sp")
     val sp: String
-)
+):Serializable // putExtraでオブジェクト型(Shop型)で受け渡す際にSerializable型にしておく必要がある

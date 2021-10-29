@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdk 31 // 31 -> 30?
+    compileSdk 31
 
     defaultConfig {
         applicationId "jp.techacademy.yusuke.shimozono.apiapp"
         minSdk 23
-        targetSdk 31 // 31 -> 30
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -36,16 +36,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10" // TODO ここはなぜかエラーになるから一旦コメントアウトした $kotlin_version -> 1.4.10?
-    implementation 'androidx.core:core-ktx:1.6.0' // 1.6.0 -> 1.3.2
-    implementation 'androidx.appcompat:appcompat:1.3.1' // 1.3.1 -> 1.2.0?
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1' // 2.1.1 -> 2.0.4?
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // エラーになるからコメントアウトした。恐らく最新のAndroidStudioでは記載不要。$kotlin_version -> 1.4.10?
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
 
     // ViewPager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     // TableLayout
-    implementation 'com.google.android.material:material:1.4.0' // 1.4.0 -> 1.2.0?
+    implementation 'com.google.android.material:material:1.4.0'
 
     // SwipeRefreshLayout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"

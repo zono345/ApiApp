@@ -3,106 +3,84 @@ package jp.techacademy.yusuke.shimozono.apiapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
-import com.squareup.picasso.Picasso
-import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_web_view.*
+import kotlinx.android.synthetic.main.activity_web_view.favoriteImageView
 
-class WebViewActivity : AppCompatActivity(){
+class WebViewActivity : AppCompatActivity() {
+    var favState:Boolean = false // 表示しているクーポン画面の店のお気に入り登録状態を表す。true→登録済み、false→未登録
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
 
-        var shop = intent.getSerializableExtra(KEY_SHOP) as? Shop
+        // getSerializableExtraでオブジェクト型(Shop型 = Serializable)でデータを受け取る
+        val shop = intent.getSerializableExtra(KEY_SHOP) as Shop
 
-        if (shop == null) {
-            Log.d("test99", "shopはnullだよ。intentで受け取れてないよ")
-        } else {
-            var url =
-                if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
-            webView.loadUrl(url)
+        // getSerializableExtraで受け取ったShop型データの中のurl情報を変数urlへ代入
+        val url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
 
-//        btnTextRefresh()
+        webView.loadUrl(url)
+        imageViewRefresh()
 
+        // ★マークをクリックした時、お気に入りに追加or削除をする。
+        favoriteImageView.setOnClickListener {
+            if (favState) {
+                showConfirmDeleteFavoriteDialog(shop.id)
+            } else {
+                onAddFavorite(shop)
+                imageViewRefresh()
+            }
         }
-
-
-
-//
-//
-//        // 課題用：クリックした店のクーポン画面のURLを格納
-//        var searchUrl:String = intent.getStringExtra("key_url").toString()
-//
-//        // TODO 後で消す。検証用
-//        button.text = searchUrl
-//
-//        //クリックした店のお気に入り登録状況に応じて、初期状態のボタンのテキストを変更する
-//        if (FavoriteShop.findByURL(searchUrl) == null) { // TODO 要修正
-//            button.text = "お気に入りへ追加する"
-//        } else {
-//            button.text = "お気に入りから削除する"
-//        }
-
-
-
-
     }
 
+    // お気に入りに追加する
+    private fun onAddFavorite(shop: Shop) {
+        FavoriteShop.insert(FavoriteShop().apply {
+            id = shop.id
+            name = shop.name
+            address = shop.address // 課題用追記。住所の表示
+            imageUrl = shop.logoImage
+            url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
+        })
+    }
 
-//    private fun btnTextRefresh() {
-//        var shop = intent.getSerializableExtra(KEY_SHOP) as Shop
-//        var favState:Boolean = false // 表示しているクーポン画面の店のお気に入り登録状態を表す。true→登録済み、false→未登録
-//        favState = FavoriteShop.findBy(shop.id) != null
-//        if (favState) button.text = "お気に入りから削除する" else button.text = "お気に入りへ追加する"
-//    }
+    // 「削除していい？」のダイアログ表示
+    private fun showConfirmDeleteFavoriteDialog(id: String) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.delete_favorite_dialog_title)
+            .setMessage(R.string.delete_favorite_dialog_message)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                deleteFavorite(id) // 「OK」ならお気に入りから削除
+                imageViewRefresh() // お気に入り状態を確認して、★マーク画像に反映する
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .create()
+            .show()
+    }
 
+    // お気に入りから削除する
+    private fun deleteFavorite(id: String) {
+        FavoriteShop.delete(id)
+    }
 
+    // クリックした店の情報をShop型オブジェクトで受け渡す
     companion object {
         private const val KEY_SHOP = "key_shop"
         fun start(activity: Activity, shop: Shop) {
-            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_SHOP, "shop"))
+            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_SHOP, shop))
         }
     }
 
-
-
-
-    // TODO companion objectのテキスト記載の当初案
-//    companion object {
-//        private const val KEY_URL = "key_url"
-//        fun start(activity: Activity, url: String) {
-//            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_URL, url))
-//        }
-//    }
-
-
-    // TODO 変更案↓ urlで受け取る時のコード。id検索できないから没。
-/*
-    companion object {
-        private const val KEY_URL = "key_url"
-        private const val KEY_ID = "key_id"
-
-        fun start(activity: Activity, url: String, id: String) {
-            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_URL, url))
-            activity.startActivity(Intent(activity, WebViewActivity::class.java).putExtra(KEY_ID, id))
+    // お気に入り状態を判定して、★マークの画像を置換する
+    private fun imageViewRefresh() {
+        val shop = intent.getSerializableExtra(KEY_SHOP) as Shop
+        favState = FavoriteShop.findBy(shop.id) != null
+        if (favState) {
+            favoriteImageView.setImageResource(R.drawable.ic_star)
+        } else {
+            favoriteImageView.setImageResource(R.drawable.ic_star_border)
         }
     }
-*/
-
-
-
-
-
 }
